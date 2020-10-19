@@ -27,6 +27,8 @@ make -j12
 
 The file you are interested in afterwards, `vmlinux`, is the un-objcopy'd image. It should be sitting right in the current directory.
 
+Drag and drop it onto the emulator to run it.
+
 ### Device tree
 
 `riscvemu.dts` is the source code of the device tree. It needs to be compiled into a `.dtc` file and placed next to the emulator executable. A device tree is absolutely essential on RISC-V platforms. Without it the kernel would have no way of knowing how much RAM is it even allowed to use, what ranges it must ignore, and so on...
