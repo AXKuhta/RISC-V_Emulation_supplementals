@@ -27,7 +27,7 @@ make -j12
 
 The file you are interested in afterwards, `vmlinux`, is the un-objcopy'd image. It should be sitting right in the current directory.
 
-Drag and drop it onto the emulator to run it.
+Drag and drop it onto the emulator to run it. You will likely need to alter the printk buffer address in the emulator if you are switching to a new image. You can determine it by setting a breakpoint onto the address of `<printk>:` (find it using `riscv64-linux-gnu-objdump -D vmlinux | grep "<printk>:"`) and observing where the memory writes go as it runs.
 
 ### Device tree
 
