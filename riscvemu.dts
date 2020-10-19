@@ -1,0 +1,57 @@
+
+/dts-v1/;
+
+/ {
+	#address-cells = <1>;
+	#size-cells = <1>;
+	
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		
+		timebase-frequency = <7800000>;
+
+		cpu@0 {
+			device_type = "cpu";
+			reg = <0>;
+			compatible = "riscv";
+			riscv,isa = "rv64imafd";
+			mmu-type = "none";
+			clock-frequency = <390000000>;
+			cpu0_intc: interrupt-controller {
+				#interrupt-cells = <1>;
+				interrupt-controller;
+				compatible = "riscv,cpu-intc";
+			};
+		};
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		
+		// A single bank located at 0x80000000
+		// 0x8000000 bytes long (128 MB)
+		reg = <0x80000000 0x8000000>;
+	};
+	
+	clint0: clint@10010000 {
+			#interrupt-cells = <1>;
+			compatible = "riscv,clint0";
+			
+			// Zone located at 0x10010000
+			// 0x10000 bytes long (64 KB)
+			reg = <0x10010000 0x10000>;
+	};
+
+	serial0: serial@100b8000 {
+		compatible = "ns8250";
+		//clock-frequency = <48000000>;
+		reg = <0x100b8000 0x100>;
+		interrupts = <10>;
+	};
+	
+	chosen {
+		bootargs = "console=ttyS0";
+		stdout-path = &serial0;
+	};
+};
