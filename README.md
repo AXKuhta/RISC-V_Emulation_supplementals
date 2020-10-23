@@ -39,3 +39,34 @@ Compilation is as follows:
 cd linux
 scripts/dtc/dtc riscvemu.dts > riscvemu.dtc
 ```
+
+### Glibc without compressed instructions
+
+In standard configuration, userspace binaries produced by `riscv64-linux-gnu-gcc` will have compressed instructions in them because the libc it links against was compiled for rv64imafdc target. This will not do -- our emulator doesn't and _will not_ support the C extension. Thankfully, there is a way to rebuild glibc in-place:
+
+```bash
+# Download the same version that was bundled with your GCC!
+# If not sure, check with `apt search libc riscv`
+wget http://ftp.gnu.org/gnu/libc/glibc-2.31.tar.xz
+tar -xf glibc-2.31.tar.xz
+```
+
+```bash
+# Let's build it
+cd glibc-2.31
+mkdir build
+cd build/
+export "CROSS_COMPILE=riscv64-unknown-elf-"
+export "CFLAGS=-march=rv64imafd -O2"
+export "CXXFLAGS=-march=rv64imafd -O2"
+export "ASFLAGS=-march=rv64imafd"
+../configure riscv64-linux-gnu --target=riscv64-linux-gnu --build=i686-pc-linux-gnu --prefix=/usr/riscv64-linux-gnu/ --enable-add-ons
+make -j12
+```
+
+```bash
+# And install it -- this could potentially cripple your GCC
+sudo make install install_root=/
+```
+
+Mine `riscv64-linux-gnu-gcc` wasn't crippled afterwards and was now producing binaries completely free of any compressed instructions! Sadly, it later turned out that all of this was moot because glibc is almost certainly a no-go on NOMMU. 
