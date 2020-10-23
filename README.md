@@ -16,7 +16,7 @@ It was compiled with `riscv64-linux-gnu-gcc` version 10.2.
 
 Compilation procedure is as follows:
 
-```
+```bash
 cd linux
 export ARCH=riscv
 export CROSS_COMPILE=riscv64-linux-gnu-
@@ -35,7 +35,7 @@ Drag and drop it onto the emulator to run it. You will likely need to alter the 
 
 Compilation is as follows:
 
-```
+```bash
 cd linux
 scripts/dtc/dtc riscvemu.dts > riscvemu.dtc
 ```
