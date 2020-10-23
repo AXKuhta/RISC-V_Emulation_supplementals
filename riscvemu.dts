@@ -9,7 +9,7 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 		
-		timebase-frequency = <7800000>;
+		timebase-frequency = <1000000>;
 
 		cpu@0 {
 			device_type = "cpu";
@@ -17,7 +17,7 @@
 			compatible = "riscv";
 			riscv,isa = "rv64imafd";
 			mmu-type = "none";
-			clock-frequency = <390000000>;
+			clock-frequency = <1000000>;
 			cpu0_intc: interrupt-controller {
 				#interrupt-cells = <1>;
 				interrupt-controller;
@@ -43,15 +43,25 @@
 			reg = <0x10010000 0x10000>;
 	};
 
-	serial0: serial@100b8000 {
+	serial0: serial@20000000 {
 		compatible = "ns8250";
-		//clock-frequency = <48000000>;
-		reg = <0x100b8000 0x100>;
+		
+		// Small area located at 0x20000000
+		// 8 bytes long
+		reg = <0x20000000 0x8>;
+		
+		clock-frequency = <48000000>;
 		interrupts = <10>;
 	};
 	
 	chosen {
-		bootargs = "console=ttyS0";
+		bootargs = "console=ttyS0 root=/dev/ram0";
 		stdout-path = &serial0;
+		
+		// This may need to be adjusted with new kernels/initrd files
+		// Zone starting at (hopefully) next megabyte after the kernel
+		// 0x400000 bytes long (4 MB)
+		linux,initrd-start = <0x80300000>;
+		linux,initrd-end =   <0x80700000>;
 	};
 };
