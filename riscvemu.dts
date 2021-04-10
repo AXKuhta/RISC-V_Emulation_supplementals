@@ -37,6 +37,7 @@
 	clint0: clint@10010000 {
 			#interrupt-cells = <1>;
 			compatible = "riscv,clint0";
+			interrupts-extended = <&cpu0_intc 3 &cpu0_intc 7>;
 			
 			// Zone located at 0x10010000
 			// 0x10000 bytes long (64 KB)
